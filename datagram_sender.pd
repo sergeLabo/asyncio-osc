@@ -1,0 +1,34 @@
+#N canvas 1443 79 517 507 12;
+#X text 24 13 Open this file with Pure Data. See www.puredata.info
+;
+#X floatatom 69 433 5 0 0 0 - - -;
+#X msg 29 120 disconnect;
+#X msg 230 315 [;
+#X msg 230 342 ];
+#X floatatom 123 435 5 0 0 0 - - -;
+#X text 172 438 bundleDepth;
+#X text 269 312 open / close bundles here.;
+#X msg 234 231 send /;
+#X msg 238 181 send /ham/egg pig 6;
+#X msg 236 156 send /ping 3.14159;
+#X obj 17 69 loadbang;
+#X msg 236 207 send /a/b/c/d/e xxxxx 2;
+#X msg 234 258 send /cheese/cheddar brie;
+#X obj 69 406 netsend 1;
+#X text 25 29 This example patch uses Pure Data's netsend 1 external
+object.;
+#X text 152 395 netsend = TCP;
+#X text 153 409 netsend 1 = UDP;
+#X msg 17 95 connect 127.0.0.1 8888;
+#X text 238 127 Click on those to send UDP messages;
+#X connect 2 0 14 0;
+#X connect 3 0 14 0;
+#X connect 4 0 14 0;
+#X connect 8 0 14 0;
+#X connect 9 0 14 0;
+#X connect 10 0 14 0;
+#X connect 11 0 18 0;
+#X connect 12 0 14 0;
+#X connect 13 0 14 0;
+#X connect 14 0 1 0;
+#X connect 18 0 14 0;

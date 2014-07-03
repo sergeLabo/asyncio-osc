@@ -4,3 +4,9 @@ __pycache__/
 
 # Geany
 *.geany
+
+# Blender
+*.blend1
+*.blend2
+*.blend3
+
