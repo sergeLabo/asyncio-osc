@@ -30,7 +30,7 @@ class MyServerUdpProtocol:
 
         msg = OSCMessage("/blender/x")
         msg.append(10*random.random())
-        self.transport.sendto(msg.getBinary(), ("127.0.0.1", 9999))
+        self.transport.sendto(msg.getBinary(), ("127.0.0.1", 9000))
 
 
     def error_received(self, exc):
@@ -49,7 +49,7 @@ def start_server(loop, addr):
 
 if __name__ == '__main__':
     host = "127.0.0.1"
-    port = 8888
+    port = 8000
 
     loop = asyncio.get_event_loop()
     if signal is not None:

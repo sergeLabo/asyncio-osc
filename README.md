@@ -5,6 +5,8 @@ UDP client server with Python asyncio and OSC message
 
 with asyncio from python 3.4 standard library
 
+and pyOSCcodec at https://github.com/sergeLabo/pyOSCcodec
+
 #### Pour faire quoi ?
 
 * Un serveur entre le Blender Game Engine et d'autres scripts.
@@ -27,7 +29,7 @@ Tested on:
 
 #### Running the Tests
 
-With Pure Data
+With Pure Data and blender
 
 
 #### Requirements
