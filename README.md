@@ -32,13 +32,11 @@ With Pure Data
 
 #### Requirements
 
-* python3.4 and beyond
+* python3.4 and more
 
 
 #### Credits
 Thanks to:
-
-* txosc: Alexandre Quessy, Arjan Scherpenisse
 * Labomedia
 
 

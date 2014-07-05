@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+###!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
 # tulipserver.py
@@ -10,15 +10,28 @@ try:
 except ImportError:
     signal = None
 
-class MyServerUdpEchoProtocol:
+from OSCcodec import decodeOSC, OSCMessage, OSCBundle
+import random
+
+
+class MyServerUdpProtocol:
 
     def connection_made(self, transport):
         print('start', transport)
         self.transport = transport
 
     def datagram_received(self, data, addr):
-        print('Data received:', data, addr)
+        #print('Data received:', data, "type", type(data), "from", addr)
+        res = decodeOSC(data)
+        print("OSC message receiced: {0}".format(res))
+
+        # echo
         self.transport.sendto(data, addr)
+
+        msg = OSCMessage("/blender/x")
+        msg.append(10*random.random())
+        self.transport.sendto(msg.getBinary(), ("127.0.0.1", 9999))
+
 
     def error_received(self, exc):
         print('Error received:', exc)
@@ -29,7 +42,7 @@ class MyServerUdpEchoProtocol:
 
 def start_server(loop, addr):
     t = asyncio.Task(loop.create_datagram_endpoint(
-        MyServerUdpEchoProtocol, local_addr=addr))
+        MyServerUdpProtocol, local_addr=addr))
     transport, server = loop.run_until_complete(t)
     return transport
 
