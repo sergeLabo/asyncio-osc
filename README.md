@@ -18,7 +18,9 @@ and pyOSCcodec at https://github.com/sergeLabo/pyOSCcodec
 
 
 #### Documentation
-On the Labomedia wiki
+On the Labomedia wiki:
+
+http://wiki.labomedia.org/index.php/Python:_Le_module_standard_asyncio_et_OSC
 
 
 #### Installation
