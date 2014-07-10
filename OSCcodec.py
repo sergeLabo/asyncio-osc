@@ -36,15 +36,9 @@ Streaming support (OSC over TCP):
 
 Sources at:
 https://gitorious.org/pyosc/devel/source/6aaf78b0c1e89942a9c5b1952266791b7ae16012:
-and
-https://gitorious.org/pyosc/devel/commit/febccde3e36bb158b44f0235dd340ab324aa10a5
 
-2 Mar. 2013
-    Added True and False nonstandard type tag
 
-23 June 2014
-    Changed 'latin1' to 'utf8'
-
+String are latin-1 encoded and decoded.
 Use decodeOSC(data) to convert a binary OSC message data to a Python list.
 Use OSCMessage() and OSCBundle() to create OSC message.
 
@@ -52,7 +46,7 @@ Use OSCMessage() and OSCBundle() to create OSC message.
 
 import math
 import struct
-
+import binascii
 
 global FloatTypes
 FloatTypes = [float]
@@ -581,7 +575,7 @@ def OSCString(next):
     The string ends with 1 to 4 zero-bytes ('\x00')
     """
     OSCstringLength = math.ceil((len(next)+1) / 4.0) * 4
-    return struct.pack(">%ds" % (OSCstringLength), str(next).encode('utf8'))
+    return struct.pack(">%ds" % (OSCstringLength), next.encode('latin-1'))
 
 def OSCBlob(next):
     """Convert a string into an OSC Blob.
@@ -591,7 +585,7 @@ def OSCBlob(next):
     The blob ends with 0 to 3 zero-bytes ('\x00')
     """
     if isinstance(next,str):
-        next = next.encode('utf8')
+        next = next.encode('latin-1')
     if isinstance(next,bytes):
         OSCblobLength = math.ceil((len(next)) / 4.0) * 4
         binary = struct.pack(">i%ds" % (OSCblobLength), OSCblobLength, next)
@@ -665,11 +659,12 @@ def OSCTimeTag(time):
 ######
 
 def _readString(data):
-    """Reads the next (null-terminated) block of data
+    """Reads the next (null-terminated) block of data.
     """
     length   = data.find(b'\0')
     nextData = int(math.ceil((length+1) / 4.0) * 4)
-    return (data[0:length].decode('utf8'), data[nextData:])
+    readstring = (data[0:length].decode('latin-1'), data[nextData:])
+    return readstring
 
 def _readBlob(data):
     """Reads the next (numbered) block of data
@@ -745,25 +740,11 @@ def _readDouble(data):
 
     return (float, rest)
 
-def _readFalse(data):
-    """ (non standard) OSC Type tag: 'F'
-    False. No bytes are allocated in the argument data.
-    """
-
-    return (False, data)
-
-def _readTrue(data):
-    """ (non standard) OSC Type tag: 'T'
-    True. No bytes are allocated in the argument data.
-    """
-
-    return (True, data)
-
 def decodeOSC(data):
     """Converts a binary OSC message to a Python list.
     """
     table = {"i":_readInt, "f":_readFloat, "s":_readString, "b":_readBlob,
-            "d":_readDouble, "t":_readTimeTag, "F":_readFalse, "T":_readTrue}
+            "d":_readDouble, "t":_readTimeTag}
     decoded = []
     address,  rest = _readString(data)
     if address.startswith(","):
@@ -812,6 +793,10 @@ if __name__ == '__main__':
 
     print("Create some OSC message and bundle:\n")
     msg = OSCMessage("/my/osc/address")
+    msg.append('è')
+    ##print(msg)
+    ##msg.append('créées') this word exist in french --> bug
+    print(msg)
     msg.append('something')
     print(msg)
     msg.insert(0, 'something else')
@@ -825,4 +810,6 @@ if __name__ == '__main__':
     del msg[3:6]
     print(msg)
     msg.pop(-2)
+    print(msg)
+    msg.append('''合久必分, 分久必合L d c s coupés é é''')
     print(msg)

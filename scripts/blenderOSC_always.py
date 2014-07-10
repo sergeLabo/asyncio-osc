@@ -22,10 +22,35 @@
 #
 #############################################################################
 
+'''
+This script run at all frame.
+'''
 
 from bge import logic as gl
 
 # Listen every frame
 gl.data = gl.my_receiver.listen()
 
+##try:
+    ##uni = gl.data
+##except:
+    ##pass
+
+# Default position
+x, y = 0, 0
+
+# Get x, y in data OSC message
+if gl.data:
+    if "/blender/x" in gl.data:
+        x = gl.data[2]
+        print (x)
+    if "/blender/y" in gl.data:
+        y = gl.data[2]
+
+# Move the Cube
+controller = gl.getCurrentController()
+owner = controller.owner
+owner.localPosition = [0.3*x, 0.3*y, 0]
+
+# Send
 gl.my_sender.simple_send_to("/toto", 3.14, (gl.ip_out, gl.port_out))

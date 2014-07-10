@@ -25,14 +25,14 @@
 
 from bge import logic as gl
 
-'''The directory with blender scripts must be "scripts" (without quote).'''
+'''send_receive.py is in scripts directory'''
 from scripts.send_receive import Receive, Send
 
 
 '''
-this script run only once at the first frame
-to initialize some variable, attribut of GameLogic
-and used always during the game
+This script run only once at the first frame
+to initialize some variable that they are attributs of GameLogic
+and used always during the game.
 '''
 
 gl.ip_in = "127.0.0.1"
@@ -42,7 +42,7 @@ gl.port_out = 8000
 gl.buffer_size = 1024
 
 # Listener python object
-gl.my_receiver = Receive(gl.ip_in, gl.port_in, gl.buffer_size, verbose=True)
+gl.my_receiver = Receive(gl.ip_in, gl.port_in, gl.buffer_size, verbose=False)
 
 # Sender python object
-gl.my_sender = Send(verbose=True)
+gl.my_sender = Send(verbose=False)
