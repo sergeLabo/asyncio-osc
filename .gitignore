@@ -10,3 +10,5 @@ __pycache__/
 *.blend2
 *.blend3
 
+/.project
+/learn.py
