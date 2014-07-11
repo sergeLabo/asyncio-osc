@@ -29,28 +29,27 @@ This script run at all frame.
 from bge import logic as gl
 
 # Listen every frame
-gl.data = gl.my_receiver.listen()
-
-##try:
-    ##uni = gl.data
-##except:
-    ##pass
+gl.data = gl.my_receiver.get_data()
 
 # Default position
 x, y = 0, 0
 
-# Get x, y in data OSC message
-if gl.data:
+if isinstance(gl.data, list):
     if "/blender/x" in gl.data:
         x = gl.data[2]
-        print (x)
     if "/blender/y" in gl.data:
         y = gl.data[2]
+
+if isinstance(gl.data, str):
+    gl.text = u"always \n" + gl.data
+    print(gl.text)
 
 # Move the Cube
 controller = gl.getCurrentController()
 owner = controller.owner
 owner.localPosition = [0.3*x, 0.3*y, 0]
 
+#
+owner["Text"] = gl.text
 # Send
 gl.my_sender.simple_send_to("/toto", 3.14, (gl.ip_out, gl.port_out))
