@@ -24,6 +24,7 @@
 
 
 from bge import logic as gl
+from scripts.sound import EasyAudio
 
 '''send_receive.py is in scripts directory'''
 from scripts.send_receive import Receive, Send
@@ -41,10 +42,26 @@ gl.port_in = 9000
 gl.port_out = 8000
 gl.buffer_size = 1024
 
-gl.text = "Test init Ö été ê ç ^ Œ œ 合久必分 分久必合"
+gl.text = "Test init Ö été ê ç ^ Œ œ "
+gl.x, gl.y = 0, 0
 
 # Listener python object
 gl.my_receiver = Receive(gl.ip_in, gl.port_in, gl.buffer_size, verbose=False)
 
 # Sender python object
 gl.my_sender = Send(verbose=False)
+
+def init_note():
+    gl.musicsources = "wiki"
+    gl.frame_counter = 0
+    gl.text_change = False
+    gl.position = 0
+
+def init_audio():
+    note_list = []
+    for i in range(36):
+        note_list.append(str(i))
+    gl.note_piano = EasyAudio(note_list, "//samples/")
+
+init_audio()
+init_note()
