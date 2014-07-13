@@ -29,6 +29,8 @@ This script run at all frame.
 import textwrap
 from bge import logic as gl
 from bge import events
+from OSCcodec import OSCBundle, OSCMessage
+
 
 note_dict = {   '0':0,  '1':35,  '2':2,  '3':34,  '4':4,  '5':33,
                 'a':6,  'b':7,  'c':8,  'd':9,  'e':10, 'f':11,
@@ -37,6 +39,17 @@ note_dict = {   '0':0,  '1':35,  '2':2,  '3':34,  '4':4,  '5':33,
                 's':24, 't':25, 'u':26, 'v':27, 'w':28, 'x':29,
                 'y':30, 'z':31, '6':32, '7':1, '8':3, '9':5}
 
+# Send
+if gl.frame_counter % 2 == 0:
+    bund = OSCBundle()
+    msg = OSCMessage("/moi", 1)
+    bund.append(msg)
+    msg1 = OSCMessage("/test", "toto")
+    bund.append(msg1)
+    gl.my_sender.send_to(bund, (gl.ip_out, gl.port_out))
+else:
+    string = u"ç à @ ù"
+    gl.my_sender.send_str_to(string, (gl.ip_out, gl.port_out))
 
 # Listen every frame
 gl.data = gl.my_receiver.get_data()
@@ -64,10 +77,6 @@ owner.localPosition = [0.3*gl.x, 0.3*gl.y, 0]
 owner["Text"] = textwrap.fill(gl.text, 80)
 # Bonne résolution au max
 owner.resolution = 4
-
-# Send
-gl.my_sender.simple_send_to("/moi", 1, (gl.ip_out, gl.port_out))
-
 
 ################################### MUSIC
 gl.frame_counter += 1

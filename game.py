@@ -5,7 +5,7 @@
 
 from time import sleep
 import threading
-from OSCcodec import decodeOSC, OSCMessage, OSCBundle
+from OSCcodec import decodeOSC, OSCMessage, OSCBundle, OSCError
 from wikikIRC3 import MyBot
 from etherpad3 import EtherPad
 import asyncio
@@ -17,15 +17,30 @@ except ImportError:
 
 class Game:
     def __init__(self):
+        '''.'''
+        self.mybot = None
+        self.wiki = u""
+        self.mypad = None
+        self.text = u""
+
+        # connect
+        ##self.connect_pad()
+        ##self.connect_irc()
+
+        # Mouvement
+        self.x = 0
+        self.sens = 1
+
+    def connect_pad(self):
         # Etherpad
         url = "http://etherpad.pingbase.net/MhYHGouMuX"
         # on va hériter de self.new_lines et self.text
         self.mypad = EtherPad(url, bavard=False)
         print("Routine to get new lines at etherpad.pingbase.net/MhYHGouMuX")
-        self.text = u""
         # Pad thread
         self.pad()
 
+    def connect_irc(self):
         # IRC
         server_list = [("irc.wikimedia.org", 6667)]
         nickname = "Labomedia-test"
@@ -37,9 +52,51 @@ class Game:
         # IRC thread
         self.irc()
 
-        # Mouvement
-        self.x = 0
-        self.sens = 1
+    def request(self, data, addr):
+        '''Je reçois data de addr, data est toujours un message OSC.'''
+        dec, typ = self.is_bundle_or_uni(data)
+        print("Raw =", data)
+        print("Data = ", dec ,"de type ", typ, " from ", addr)
+        resp = None
+        if typ == "osc":
+            tag_dict = self.get_all_tag_in_bundle(dec)
+            if "/moi" in tag_dict:
+                resp = self.OSC_x_position()
+        return resp
+
+    def get_all_tag_in_bundle(self, dec):
+        '''Recherche de tag dans la liste des messages.'''
+        tag_dict = {}
+        for d in dec:
+            tag_dict[d[0]] = d[2]
+        print(tag_dict)
+        return tag_dict
+
+    def is_bundle_or_uni(self, data):
+        '''test si bundle ou unicode sinon None.'''
+
+        bund = True
+        try:
+            dec = decodeOSC(data)
+            typ = "osc"
+            # test bundle
+            if dec[0] != "#bundle":
+                dec = None
+                typ = None
+                bund = None
+            else:
+                # je coupe les 2 premiers
+                dec = dec[2:]
+        except OSCError:
+            bund = None
+        if not bund:
+            try:
+                dec = data.decode("utf-8")
+                typ = "uni"
+            except:
+                print("Data received incompréhensible")
+                dec, typ = None, None
+        return dec, typ
 
     def OSC_x_position(self):
         msg = OSCMessage("/blender/x")
@@ -69,6 +126,12 @@ class Game:
 
 if __name__ == '__main__':
     mygame = Game()
+
+    data = b'#budle\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x10/moi\x00\x00\x00\x00,i\x00\x00\x00\x00\x00\x01\x00\x00\x00\x14/test\x00\x00\x00,s\x00\x00toto\x00\x00\x00\x00'
+
+    dec = ['#bundle', 0.0, ['/moi', ',i', 1]]
+    addr = ('127.0.0.1', 53860)
+    resp = mygame.request(data, addr)
 
 
     ##loop = asyncio.get_event_loop()
