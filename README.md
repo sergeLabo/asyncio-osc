@@ -1,23 +1,23 @@
 asyncio-osc
 ===========
 
-UDP client server with Python asyncio and OSC message
+UDP client server with Python asyncio, OSC messages and json messages.
 
-with asyncio from python 3.4 standard library
+The aim is to use OSC and Unicode together.
+
+with asyncio server from python 3.4 standard library
 
 and pyOSCcodec at https://github.com/sergeLabo/pyOSCcodec
 
-#### Pour faire quoi ?
-
-* Un serveur entre le Blender Game Engine et d'autres scripts.
-* Un serveur dans le Blender Game Engine.
-* Des communications entre des logiciels ou matériels qui reçoivent et envoient en OSC.
-
-
 #### Usage
 
+* A server between Blender Game Engine and other scripts.
+* A server in Blender Game Engine.
+* Communications between sofwares and hardwares using OSC.
+* Send receive data over UDP encoded and decoded as utf-8
 
 #### Documentation
+
 On the Labomedia wiki:
 
 http://wiki.labomedia.org/index.php/Python:_Le_module_standard_asyncio_et_OSC
@@ -36,6 +36,7 @@ With Pure Data and blender
 
 #### Requirements
 
+* Linux
 * python3.4 and more
 
 
@@ -47,7 +48,3 @@ Thanks to:
 #### License
 Skandal is released under the GENERAL PUBLIC LICENSE Version 2, June 1991.
 See the bundled LICENSE file for details.
-
-
-#### Bugs:
-

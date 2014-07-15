@@ -9,7 +9,6 @@ import json
 from OSCcodec import decodeOSC, OSCMessage, OSCBundle, OSCError
 from wikikIRC3 import MyBot
 from etherpad3 import EtherPad
-import asyncio
 try:
     import signal
 except ImportError:
@@ -59,19 +58,32 @@ class Game:
         print("Raw =", data)
         print("Data = ", dec ,"de type ", typ, " from ", addr)
         resp = None
-        if typ == "osc":
-            tag_dict = self.get_all_tag_in_bundle(dec)
-            if "/moi" in tag_dict:
-                resp = self.OSC_x_position()
+        ##if typ == "osc":
+            ##tag_dict = self.get_all_tag_in_bundle(dec)
+            ##if "/moi" in tag_dict:
+                ##self.set_x_possiton()
+                ##d = {
+                ##"text": u"@ là forêt, païen, où À la fête ! {} []",
+                ##"/blender/x": self.x
+                ##}
+                ##resp = json.dumps(d).encode("utf-8")
+                ##if typ == "osc":
+            ##tag_dict = self.get_all_tag_in_bundle(dec)
 
-        resp = self.OSC_x_position()
-
-        from io import StringIO
-        io = StringIO()
-        d = [u"biroute", 1, [1,2], {1:2,3:4}]
-        d = {1:{"t": 2, "r": 56, "list":[1,2,3]}}
+        self.set_x_possiton()
+        d = {
+        "text": u"@ là forêt, païen, où À la fête ! {} []",
+        "/blender/x": self.x
+        }
         resp = json.dumps(d).encode("utf-8")
         return resp
+
+    def set_x_possiton(self):
+        if self.x > 10:
+            self.sens = -1
+        if self.x < -10:
+            self.sens = 1
+        self.x += self.sens/10
 
     def get_all_tag_in_bundle(self, dec):
         '''Recherche de tag dans la liste des messages.'''
@@ -114,11 +126,7 @@ class Game:
 
     def OSC_x_position(self):
         msg = OSCMessage("/blender/x")
-        if self.x > 10:
-            self.sens = -1
-        if self.x < -10:
-            self.sens = 1
-        self.x += self.sens/10
+
         msg.append(self.x) # de -10 à 10
         bnd = OSCBundle()
         bnd.append(msg)
@@ -130,7 +138,6 @@ class Game:
         msg2 = OSCMessage("/test")
         msg2.append(1)
         bnd.append(msg2)
-
         return bnd.getBinary()
 
     def pad(self):

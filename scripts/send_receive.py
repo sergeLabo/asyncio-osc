@@ -65,6 +65,10 @@ except:
     # to run in blender scripts directory
     from scripts.OSCcodec import OSCMessage, decodeOSC
 
+try:
+    from datagram_decode import Decode
+except:
+    from scripts.datagram_decode import Decode
 
 class Receive:
     '''Receive, decode Message with a socket .'''
@@ -260,9 +264,8 @@ class Client:
         if self.verb:
             print('{0} sended'.format(req))
 
-
     def listen(self):
-        '''Get decoded received data, OSC in a list or string unicode.'''
+        '''Return received data and address from.'''
         raw_data = None
         try:
             raw_data, addr = self.sock.recvfrom(self.buffer_size)
@@ -271,7 +274,7 @@ class Client:
         except:
             if self.verb:
                 print('Received nothing')
-
+        return raw_data, addr
 
 
 if __name__ == '__main__':
@@ -280,10 +283,13 @@ if __name__ == '__main__':
     port = 8000
     buff = 1024
 
-    myclient = Client(host, port, buff, True)
-
+    myclient = Client(host, port, buff, False)
+    mydecoder = Decode()
     while True:
         req = u"test".encode("utf-8")
         myclient.send(req)
-        myclient.listen()
+        raw_data, addr = myclient.listen()
+        print(addr)
+        decod, typ = mydecoder.decode(raw_data)
+        print(decod, typ)
         sleep(1)

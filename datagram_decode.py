@@ -31,9 +31,8 @@ How to code and decode data sended on UDP:
     - json
 '''
 
-
-from OSCcodec import OSCMessage, decodeOSC
 import json
+from OSCcodec import OSCMessage, decodeOSC
 
 
 class Decode:
@@ -42,7 +41,7 @@ class Decode:
         - OSC Message
         - Unicode utf-8 string
         - JSON
-         https://docs.python.org/3.4/library/json.html#standard-compliance
+         https://docs.python.org/3.4/library/json.html
          http://fr.openclassrooms.com/informatique/cours/serialisez-vos-objets-au-format-json
         '''
     def __init__(self):
