@@ -27,7 +27,7 @@ from bge import logic as gl
 from scripts.sound import EasyAudio
 
 '''send_receive.py is in scripts directory'''
-from scripts.send_receive import Receive, Send
+from scripts.send_receive import Client
 
 
 '''
@@ -46,10 +46,7 @@ gl.text = "Test init Ö été ê ç ^ Œ œ "
 gl.x, gl.y = 0, 0
 
 # Listener python object
-gl.my_receiver = Receive(gl.ip_in, gl.port_in, gl.buffer_size, verbose=False)
-
-# Sender python object
-gl.my_sender = Send(verbose=False)
+gl.myclient= Client(gl.ip_in, gl.port_in, gl.buffer_size, verbose=False)
 
 def init_note():
     gl.musicsources = "wiki"

@@ -46,13 +46,13 @@ if gl.frame_counter % 2 == 0:
     bund.append(msg)
     msg1 = OSCMessage("/test", "toto")
     bund.append(msg1)
-    gl.my_sender.send_to(bund, (gl.ip_out, gl.port_out))
+    gl.myclient.send_to(bund.getBinary(), (gl.ip_out, gl.port_out))
 else:
-    string = u"ç à @ ù"
-    gl.my_sender.send_str_to(string, (gl.ip_out, gl.port_out))
+    string = u" 中国 / 中國 日本"
+    gl.myclient.send_to(string.encode("utf-8"), (gl.ip_out, gl.port_out))
 
 # Listen every frame
-gl.data = gl.my_receiver.get_data()
+gl.data, addr = gl.myclient.listen()
 
 
 if isinstance(gl.data, list):
