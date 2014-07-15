@@ -5,6 +5,7 @@
 
 from time import sleep
 import threading
+import json
 from OSCcodec import decodeOSC, OSCMessage, OSCBundle, OSCError
 from wikikIRC3 import MyBot
 from etherpad3 import EtherPad
@@ -62,6 +63,14 @@ class Game:
             tag_dict = self.get_all_tag_in_bundle(dec)
             if "/moi" in tag_dict:
                 resp = self.OSC_x_position()
+
+        resp = self.OSC_x_position()
+
+        from io import StringIO
+        io = StringIO()
+        d = [u"biroute", 1, [1,2], {1:2,3:4}]
+        d = {1:{"t": 2, "r": 56, "list":[1,2,3]}}
+        resp = json.dumps(d).encode("utf-8")
         return resp
 
     def get_all_tag_in_bundle(self, dec):
@@ -74,21 +83,26 @@ class Game:
 
     def is_bundle_or_uni(self, data):
         '''test si bundle ou unicode sinon None.'''
-
         bund = True
+        typ = None
         try:
             dec = decodeOSC(data)
-            typ = "osc"
-            # test bundle
-            if dec[0] != "#bundle":
-                dec = None
-                typ = None
-                bund = None
+            if len(dec) > 0:
+                typ = "osc"
+                # test bundle
+                if len(dec) > 0:
+                    if dec[0] != "#bundle":
+                        dec = None
+                        typ = None
+                        bund = None
+                    else:
+                        # je coupe les 2 premiers
+                        dec = dec[2:]
             else:
-                # je coupe les 2 premiers
-                dec = dec[2:]
+                typ = None
         except OSCError:
             bund = None
+
         if not bund:
             try:
                 dec = data.decode("utf-8")
@@ -106,7 +120,18 @@ class Game:
             self.sens = 1
         self.x += self.sens/10
         msg.append(self.x) # de -10 à 10
-        return msg.getBinary()
+        bnd = OSCBundle()
+        bnd.append(msg)
+
+        msg1 = OSCMessage("/toto")
+        msg1.append("pourquoi ?")
+        bnd.append(msg1)
+
+        msg2 = OSCMessage("/test")
+        msg2.append(1)
+        bnd.append(msg2)
+
+        return bnd.getBinary()
 
     def pad(self):
         # Thread qui tourne pour le bot

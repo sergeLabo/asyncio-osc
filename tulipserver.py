@@ -32,7 +32,8 @@ class MyServerUdpProtocol:
         '''
         resp = self.mygame.request(data, addr)
         if resp:
-            self.transport.sendto(resp, ("127.0.0.1", 9000))
+            ##self.transport.sendto(resp, ("127.0.0.1", 9000))
+            self.transport.sendto(resp, addr)
 
     def datagram_send(self, data, addr):
         print('Data sended:', data, "to", addr)
