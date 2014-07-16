@@ -23,9 +23,10 @@ class Game:
         self.mypad = None
         self.text = u""
 
-        # connect
-        ##self.connect_pad()
-        ##self.connect_irc()
+        # Etherpad, wikikIRC
+        self.connect_pad()
+        self.connect_irc()
+        self.update_irc_pad()
 
         # Mouvement
         self.x = 0
@@ -37,8 +38,6 @@ class Game:
         # on va hériter de self.new_lines et self.text
         self.mypad = EtherPad(url, bavard=False)
         print("Routine to get new lines at etherpad.pingbase.net/MhYHGouMuX")
-        # Pad thread
-        self.pad()
 
     def connect_irc(self):
         # IRC
@@ -52,29 +51,37 @@ class Game:
         # IRC thread
         self.irc()
 
+    def update_irc_pad(self):
+        # Thread qui tourne pour le bot
+        thread1 = threading.Thread(target=self.get_diff)
+        thread1.start()
+
+    def get_diff(self):
+        while True:
+            self.text = self.mypad.get_text() # liste de lignes
+            self.wiki = self.mybot.wiki_out
+            sleep(2)
+
+    def irc(self):
+        # Thread qui tourne pour le bot
+        thread2 = threading.Thread(target=self.mybot.start)
+        thread2.start()
+
     def request(self, data, addr):
         '''Je reçois data de addr, data est toujours un message OSC.'''
         dec, typ = self.is_bundle_or_uni(data)
-        print("Raw =", data)
-        print("Data = ", dec ,"de type ", typ, " from ", addr)
+        #print("Raw =", data)
+        #print("Data = ", dec ,"de type ", typ, " from ", addr)
         resp = None
-        ##if typ == "osc":
-            ##tag_dict = self.get_all_tag_in_bundle(dec)
-            ##if "/moi" in tag_dict:
-                ##self.set_x_possiton()
-                ##d = {
-                ##"text": u"@ là forêt, païen, où À la fête ! {} []",
-                ##"/blender/x": self.x
-                ##}
-                ##resp = json.dumps(d).encode("utf-8")
-                ##if typ == "osc":
-            ##tag_dict = self.get_all_tag_in_bundle(dec)
-
+        texte = u"Valeur par défaut"
+        if typ == "osc":
+            tag_dict = self.get_all_tag_in_bundle(dec)
+            if "/irc" in tag_dict:
+                texte = self.wiki
+            if "/pad" in tag_dict:
+                texte = self.text
         self.set_x_possiton()
-        d = {
-        "text": u"@ là forêt, païen, où À la fête ! {} []",
-        "/blender/x": self.x
-        }
+        d = {"text": texte, "/blender/x": self.x}
         resp = json.dumps(d).encode("utf-8")
         return resp
 
@@ -140,21 +147,7 @@ class Game:
         bnd.append(msg2)
         return bnd.getBinary()
 
-    def pad(self):
-        # Thread qui tourne pour le bot
-        thread1 = threading.Thread(target=self.get_diff_etherpad)
-        thread1.start()
 
-    def get_diff_etherpad(self):
-        while True:
-            self.text = self.mypad.get_text() # liste de lignes
-            self.wiki = self.mybot.wiki_out
-            sleep(2)
-
-    def irc(self):
-        # Thread qui tourne pour le bot
-        thread2 = threading.Thread(target=self.mybot.start)
-        thread2.start()
 
 if __name__ == '__main__':
     mygame = Game()
@@ -175,3 +168,15 @@ if __name__ == '__main__':
             ##print("Etherpad diff =", new_lines)
             ##yield from asyncio.sleep(2)
             ##loop.run_until_complete(mygame.get_diff_etherpad_every_2s())
+
+        ##if typ == "osc":
+            ##tag_dict = self.get_all_tag_in_bundle(dec)
+            ##if "/moi" in tag_dict:
+                ##self.set_x_possiton()
+                ##d = {
+                ##"text": u"@ là forêt, païen, où À la fête ! {} []",
+                ##"/blender/x": self.x
+                ##}
+                ##resp = json.dumps(d).encode("utf-8")
+                ##if typ == "osc":
+            ##tag_dict = self.get_all_tag_in_bundle(dec)

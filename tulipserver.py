@@ -36,7 +36,7 @@ class MyServerUdpProtocol:
             self.transport.sendto(resp, addr)
 
     def datagram_send(self, data, addr):
-        print('Data sended:', data, "to", addr)
+        #print('Data sended:', data, "to", addr)
         self.transport.sendto(data, addr)
 
     def error_received(self, exc):

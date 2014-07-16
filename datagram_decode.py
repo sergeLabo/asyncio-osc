@@ -44,9 +44,6 @@ class Decode:
          https://docs.python.org/3.4/library/json.html
          http://fr.openclassrooms.com/informatique/cours/serialisez-vos-objets-au-format-json
         '''
-    def __init__(self):
-        pass
-
     def decode(self, data):
         '''Return decoded data and type:
         - data is always bytes
