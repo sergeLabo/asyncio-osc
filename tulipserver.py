@@ -23,6 +23,7 @@
 #############################################################################
 
 import asyncio
+import subprocess
 try:
     import signal
 except ImportError:
@@ -75,46 +76,19 @@ if __name__ == '__main__':
     host = "127.0.0.1"
     port = 8000
 
+    #subprocess.Popen(['blenderplayer','asyncio-osc.blend'],
+                        #stdout=subprocess.PIPE)
+
     loop = asyncio.get_event_loop()
     if signal is not None:
         loop.add_signal_handler(signal.SIGINT, loop.stop)
-
     server = start_server(loop, (host, port))
 
-
+    subprocess.Popen(['blenderplayer','asyncio-osc.blend'],
+                        stdout=subprocess.PIPE)
     try:
         print("Le serveur UDP tourne")
         loop.run_forever()
     finally:
         server.close()
         loop.close()
-
-
-
-
-##
-##@asyncio.coroutine
-##def wait_2s():
-    ##while True:
-        ##print("tempo 2s")
-        ##yield from asyncio.sleep(2)
-        ##
-#res = decodeOSC(data)
-#print("OSC message receiced: {0}".format(res))
-# echo
-#rep = "Ö été ê ç ^ Œ œ 合久必分 分久必合".encode('utf-8')
-#self.transport.sendto(rep, addr)
-#self.transport.sendto(rep, ("127.0.0.1", 9000))
-
-    ##asyncio.Task(wait_2s())
-
-        ##print('Data received:', data, "type", type(data), "from", addr)
-        ##msg_x = self.mygame.OSC_x_position()
-        ###print("msg_x =", msg_x)
-        ##self.datagram_send(msg_x, ("127.0.0.1", 9000))
-        ##if time() - self.t0 > 2:
-            ##self.t0 = time()
-            ##sleep(0.02)
-            ##t = self.mygame.text
-            ##w = self.mygame.wiki
-            ##self.datagram_send(w.encode("utf-8"), ("127.0.0.1", 9000))

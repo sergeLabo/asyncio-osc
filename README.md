@@ -31,7 +31,9 @@ Tested on:
 
 #### Running the Tests
 
-With Pure Data and blender
+Run in terminal
+
+run_asyncio-osc.sh
 
 
 #### Requirements

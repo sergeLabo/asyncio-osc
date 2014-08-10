@@ -1,4 +1,4 @@
-###!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
 # game.py
@@ -176,26 +176,3 @@ if __name__ == '__main__':
     dec = ['#bundle', 0.0, ['/moi', ',i', 1]]
     addr = ('127.0.0.1', 53860)
     resp = mygame.request(data, addr)
-
-
-    ##loop = asyncio.get_event_loop()
-    ##@asyncio.coroutine
-    ##def get_diff_etherpad_every_2s(self):
-        ##while True:
-            ##print("J'attends la réponse de etherpad")
-            ##self.text = self.mypad.get_text() # liste de lignes
-            ##print("Etherpad diff =", new_lines)
-            ##yield from asyncio.sleep(2)
-            ##loop.run_until_complete(mygame.get_diff_etherpad_every_2s())
-
-        ##if typ == "osc":
-            ##tag_dict = self.get_all_tag_in_bundle(dec)
-            ##if "/moi" in tag_dict:
-                ##self.set_x_possiton()
-                ##d = {
-                ##"text": u"@ là forêt, païen, où À la fête ! {} []",
-                ##"/blender/x": self.x
-                ##}
-                ##resp = json.dumps(d).encode("utf-8")
-                ##if typ == "osc":
-            ##tag_dict = self.get_all_tag_in_bundle(dec)
